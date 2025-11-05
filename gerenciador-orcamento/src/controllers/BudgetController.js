@@ -2,6 +2,12 @@
 import { getbudgetData, addbudgetRow } from "../models/budgetmodels";
 
 
+export function removeBudgetRow(setBudgetData, index){
+  setBudgetData(prev => prev.flilter((_, i) => i !== index));
+}
+
+
+
 export async function LoadBudgetData(setBudgetData) {
 
     const data = await getbudgetData();
