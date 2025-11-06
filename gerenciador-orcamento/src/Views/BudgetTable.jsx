@@ -1,34 +1,29 @@
-// VIEW — tabela que exibe as despesas e permite remover linhas
+import { BudgetForm, BudgetTable, BudgetStatsDashboard } from "./views";
+import { loadBudgetData, handleAddRow, removeBudgetRow } from "./controllers/BudgetController";
 
-export default function BudgetTable({ data, onRemove }) {
+export default function App() {
+  const [budgetData, setBudgetData] = useState([]);
+
+  useEffect(() => {
+    loadBudgetData(setBudgetData);
+  }, []);
+
+  const handleAdd = (categoria, valor) => {
+    handleAddRow(setBudgetData, categoria, valor);
+  };
+
+  const handleRemove = (index) => {
+    removeBudgetRow(setBudgetData, index);
+  };
+
   return (
-    <table className="w-full border-collapse border border-gray-300">
-      <thead>
-        <tr className="bg-gray-200">
-          <th className="border px-4 py-2">Categoria</th>
-          <th className="border px-4 py-2">Quantidade (R$)</th>
-          <th className="border px-4 py-2 w-20">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((item, i) => (
-          <tr key={i}>
-            <td className="border px-4 py-2">{item.categoria}</td>
-            <td className="border px-4 py-2 text-right">
-              {item.quantidade.toFixed(2)}
-            </td>
-            <td className="border px-4 py-2 text-center">
-              <button
-                onClick={() => onRemove(i)}
-                className="text-red-600 hover:text-red-800"
-                title="Remover linha"
-              >
-                🗑️
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+      <h1 className="text-3xl font-bold mb-6 text-blue-700">Gerenciador de Orçamento</h1>
+      <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow">
+        <BudgetForm onAdd={handleAdd} />
+        <BudgetTable data={budgetData} onRemove={handleRemove} />
+        <BudgetStatsDashboard data={budgetData} />
+      </div>
+    </div>
   );
 }
