@@ -1,4 +1,8 @@
-export default function BudgetTable({ data }) {
+export default function BudgetTable({ data = [] }) {
+  if (!data.length) {
+    return <p className="text-gray-500 text-center">Nenhum dado disponível.</p>;
+  }
+
   return (
     <table className="w-full border-collapse border border-gray-300">
       <thead>
