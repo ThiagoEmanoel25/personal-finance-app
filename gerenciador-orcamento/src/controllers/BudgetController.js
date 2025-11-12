@@ -16,5 +16,9 @@ export async function LoadBudgetData(setBudgetData) {
 
 export async function handleAddRow(setBudgetData, categoria, quantidade) {
   const newItem = await addBudgetRow(categoria, quantidade);
-  setBudgetData(prev => [...prev, newItem]);
+  setBudgetData((prev) => [...prev, newItem]);
+}
+
+export function removeBudgetRow(setBudgetData, index) {
+  setBudgetData((prev) => prev.filter((_, i) => i !== index));
 }
