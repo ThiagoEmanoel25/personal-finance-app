@@ -1,12 +1,8 @@
-// VIEW — Tabela que exibe as despesas e permite remover linhas
-export default function BudgetTable({ data, onRemove }) {
-  // Se não houver dados, mostra uma mensagem amigável
-  if (!data || data.length === 0) {
-    return (
-      <p className="text-gray-500 text-center mt-4">
-        Nenhum item adicionado ainda.
-      </p>
-    );
+
+export default function BudgetTable({ data = [] }) {
+  if (!data.length) {
+    return <p className="text-gray-500 text-center">Nenhum dado disponível.</p>;
+
   }
 
   return (
