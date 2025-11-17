@@ -1,24 +1,16 @@
-// cordena o Model com a view
-import { getbudgetData, addbudgetRow } from "../models/budgetmodels";
+import { getBudgetData, addBudgetRow } from "../models/budgetmodels.js";
 
-
-export function removeBudgetRow(setBudgetData, index){
-  setBudgetData(prev => prev.flilter((_, i) => i !== index));
-}
-
-
-
-export async function LoadBudgetData(setBudgetData) {
-
-    const data = await getbudgetData();
+export async function loadBudgetData(setBudgetData) {
+    const data = await getBudgetData();
     setBudgetData(data);
 }
 
 export async function handleAddRow(setBudgetData, categoria, quantidade) {
-  const newItem = await addBudgetRow(categoria, quantidade);
-  setBudgetData((prev) => [...prev, newItem]);
+    const newItem = await addBudgetRow(categoria, quantidade);
+    setBudgetData((prev) => [...prev, newItem]);
 }
 
+// mantém apenas esta versão
 export function removeBudgetRow(setBudgetData, index) {
-  setBudgetData((prev) => prev.filter((_, i) => i !== index));
+    setBudgetData((prev) => prev.filter((_, i) => i !== index));
 }
