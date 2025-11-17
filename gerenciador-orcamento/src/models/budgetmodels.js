@@ -13,7 +13,4 @@ export async function addBudgetRow(categoria, quantidade) {
   return newItem;
 }
 
-// Remove um item pelo índice
-export function removeBudgetRow(setBudgetData, index) {
-  setBudgetData((prev) => prev.filter((_, i) => i !== index));
-}
+
