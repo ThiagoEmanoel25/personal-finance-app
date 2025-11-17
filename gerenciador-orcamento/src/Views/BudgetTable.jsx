@@ -1,8 +1,7 @@
 
-export default function BudgetTable({ data = [] }) {
+export default function BudgetTable({ data = [], onRemove }) {
   if (!data.length) {
     return <p className="text-gray-500 text-center">Nenhum dado disponível.</p>;
-
   }
 
   return (
