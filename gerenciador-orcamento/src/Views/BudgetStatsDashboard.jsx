@@ -2,7 +2,7 @@
 export default function BudgetStatsDashboard({ data }) {
   if (!data || data.length === 0) return null;
 
-  const total = data.reduce((acc, item) => acc + item.valor, 0);
+  const total = data.reduce((acc, item) => acc + item.quantidade, 0);
   const media = total / data.length;
 
   return (
