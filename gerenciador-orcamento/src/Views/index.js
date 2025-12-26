@@ -6,3 +6,4 @@ export { default as CategoryChart } from "./CategoryChart.jsx";
 export { default as Login } from "./Login.jsx";
 export { default as Register } from "./Register.jsx";
 export { default as Dashboard } from "./Dashboard.jsx";
+export { default as GamificationCard } from "./GamificationCard.jsx";
