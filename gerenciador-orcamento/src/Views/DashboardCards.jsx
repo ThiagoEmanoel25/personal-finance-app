@@ -5,12 +5,12 @@ export default function DashboardCards({ data }) {
         if (!data || data.length === 0) return { entradas: 0, saidas: 0, saldo: 0 };
 
         const entradas = data
-            .filter(item => item.tipo === 'Entrada')
-            .reduce((acc, item) => acc + item.quantidade, 0);
+            .filter(item => item.type === 'Entrada')
+            .reduce((acc, item) => acc + Number(item.value), 0);
 
         const saidas = data
-            .filter(item => !item.tipo || item.tipo === 'Saída') // Retrocompatibilidade: sem tipo = saída
-            .reduce((acc, item) => acc + item.quantidade, 0);
+            .filter(item => item.type === 'Saída')
+            .reduce((acc, item) => acc + Number(item.value), 0);
 
         return { entradas, saidas, saldo: entradas - saidas };
     }, [data]);

@@ -4,7 +4,7 @@ import {
     handleAddRow,
     removeBudgetRow,
 } from "../controllers/BudgetController.js";
-import { BudgetForm, BudgetTable, DashboardCards, BalanceChart, CategoryChart } from "./index.js";
+import { BudgetForm, BudgetTable, DashboardCards, BalanceChart, CategoryChart, GamificationCard } from "./index.js";
 
 export default function Dashboard() {
     const [BudgetData, setBudgetData] = useState([]);
@@ -50,6 +50,7 @@ export default function Dashboard() {
 
                 {/* Esquerda: Dashboard (Stats) - Ocupa 7 colunas no desktop */}
                 <div className="lg:col-span-7 space-y-6">
+                    <GamificationCard data={BudgetData} />
                     <DashboardCards data={BudgetData} />
                     <BalanceChart data={BudgetData} />
                     <CategoryChart data={BudgetData} />
