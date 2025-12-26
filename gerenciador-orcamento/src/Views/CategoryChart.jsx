@@ -7,9 +7,9 @@ export default function CategoryChart({ data }) {
 
         // Filtra apenas saídas e agrupa por categoria
         const grouped = data.reduce((acc, item) => {
-            if (item.tipo === 'Entrada') return acc; // Ignora entradas
-            const cat = item.categoria || "Outros";
-            acc[cat] = (acc[cat] || 0) + item.quantidade;
+            if (item.type === 'Entrada') return acc; // Ignora entradas
+            const cat = item.category || "Outros";
+            acc[cat] = (acc[cat] || 0) + Number(item.value);
             return acc;
         }, {});
 
