@@ -19,16 +19,18 @@ export default function BudgetTable({ data = [], onRemove }) {
         <tbody className="divide-y divide-gray-100">
           {data.map((item, index) => (
             <tr
-              key={index}
+              key={item._id || index}
               className="hover:bg-blue-50 transition-colors duration-150 group"
             >
-              <td className="px-4 py-3 text-gray-600 text-sm">{item.data || "-"}</td>
+              <td className="px-4 py-3 text-gray-600 text-sm">{
+                new Date(item.date).toLocaleDateString('pt-BR') || "-"
+              }</td>
 
-              <td className="px-4 py-3 font-medium text-gray-800">{item.categoria}</td>
+              <td className="px-4 py-3 font-medium text-gray-800">{item.category}</td>
 
-              <td className={`px-4 py-3 font-mono font-medium ${item.tipo === 'Entrada' ? 'text-green-600' : 'text-gray-700'
+              <td className={`px-4 py-3 font-mono font-medium ${item.type === 'Entrada' ? 'text-green-600' : 'text-gray-700'
                 }`}>
-                {item.tipo === 'Entrada' ? '+' : '-'} {item.quantidade.toLocaleString("pt-BR", {
+                {item.type === 'Entrada' ? '+' : '-'} {Number(item.value).toLocaleString("pt-BR", {
                   style: "currency",
                   currency: "BRL",
                 })}
@@ -36,7 +38,7 @@ export default function BudgetTable({ data = [], onRemove }) {
 
               <td className="px-4 py-3 text-center">
                 <button
-                  onClick={() => onRemove(index)}
+                  onClick={() => onRemove(item._id)}
                   className="text-gray-400 hover:text-red-500 transition opacity-0 group-hover:opacity-100"
                   title="Remover linha"
                 >
