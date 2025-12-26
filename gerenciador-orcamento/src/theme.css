@@ -1,0 +1,25 @@
+/* Design System Theme Variables */
+:root {
+    /* Primary Brand Colors */
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+
+    /* Income (Entradas) */
+    --color-success: #10b981;
+    --color-success-bg: #d1fae5;
+
+    /* Expense (Saídas) */
+    --color-danger: #ef4444;
+    --color-danger-bg: #fee2e2;
+
+    /* Neutrals */
+    --color-bg: #f9fafb;
+    --color-surface: #ffffff;
+    --color-text-main: #1f2937;
+    --color-text-muted: #6b7280;
+
+    /* Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
