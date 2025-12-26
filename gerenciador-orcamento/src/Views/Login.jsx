@@ -2,33 +2,40 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
-    // ... existing code ...
-    <div className="mt-6 text-center">
-        <p className="text-sm text-gray-500">
-            Não tem uma conta?{" "}
-            <Link
-                to="/register"
-                className="font-medium text-blue-600 hover:text-blue-500"
-            >
-                Cadastre-se
-            </Link>
-        </p>
-    </div>
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         setIsLoading(true);
 
-        // Simulação de login
-        setTimeout(() => {
-            localStorage.setItem("authToken", "simulated-token");
+        try {
+            const response = await fetch("http://localhost:3001/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.msg || "Erro ao entrar");
+                setIsLoading(false);
+                return;
+            }
+
+            // Sucesso: Salva o Token e Usuário
+            localStorage.setItem("authToken", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            navigate("/"); // Vai para o Dashboard
+        } catch (error) {
+            console.error(error);
+            alert("Erro de conexão com o servidor");
             setIsLoading(false);
-            navigate("/"); // Redireciona para o Dashboard
-        }, 1500);
+        }
     };
 
     return (
@@ -91,7 +98,7 @@ export default function Login() {
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth="2"
-                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                                     />
                                 </svg>
                             </div>
@@ -189,12 +196,12 @@ export default function Login() {
                 <div className="mt-6 text-center">
                     <p className="text-sm text-gray-500">
                         Não tem uma conta?{" "}
-                        <a
-                            href="#"
+                        <Link
+                            to="/register"
                             className="font-medium text-blue-600 hover:text-blue-500"
                         >
                             Cadastre-se
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>
