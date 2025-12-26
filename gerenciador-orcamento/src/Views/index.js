@@ -1,6 +1,8 @@
-
 export { default as BudgetForm } from "./Budgetform.jsx";
 export { default as BudgetTable } from "./BudgetTable.jsx";
 export { default as DashboardCards } from "./DashboardCards.jsx";
 export { default as BalanceChart } from "./BalanceChart.jsx";
 export { default as CategoryChart } from "./CategoryChart.jsx";
+export { default as Login } from "./Login.jsx";
+export { default as Register } from "./Register.jsx";
+export { default as Dashboard } from "./Dashboard.jsx";
