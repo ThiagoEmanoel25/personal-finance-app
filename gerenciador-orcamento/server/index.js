@@ -1,131 +1,153 @@
-const express = require('express');
-const cors = require('cors');
-const { google } = require('googleapis');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("./models/User");
+const Transaction = require("./models/Transaction");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 3001;
+// --- CONCEITOS ---
+// 1. Mongoose: É o nosso ODM (Object Data Modeler). Ele traduz código JS para comandos do Banco de Dados.
+// 2. JWT (JSON Web Token): É o crachá digital. Quando o usuário loga, damos um token. Ele usa esse token para pedir dados.
 
-// Configuração do Google Sheets
-// É necessário ter o arquivo credentials.json na raiz da pasta server ou configurar variável de ambiente
-const auth = new google.auth.GoogleAuth({
-    keyFile: 'credentials.json',
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+// Conexão com MongoDB
+mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => console.log("✅ Conectado ao MongoDB!"))
+    .catch((err) => console.error("❌ Erro ao conectar no MongoDB:", err));
 
-const sheets = google.sheets({ version: 'v4', auth });
-const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+// Middleware de Autenticação (O Segurança)
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
 
-// Verificação de inicialização
-async function checkConnection() {
-    if (!SPREADSHEET_ID) {
-        console.error("❌ ERRO: variável SPREADSHEET_ID não definida no .env ou arquivo não encontrado.");
-        return;
-    }
-    console.log(`🔍 Tentando conectar na Planilha ID: ${SPREADSHEET_ID}`);
+    if (!token) return res.sendStatus(401); // Sem crachá, sem acesso
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403); // Crachá inválido
+        req.user = user; // Salva quem é o usuário na requisição
+        next();
+    });
+};
+
+/* =========================================================
+   ROTAS DE AUTENTICAÇÃO (AUTH)
+   ========================================================= */
+
+// REGISTRO
+app.post("/api/auth/register", async (req, res) => {
     try {
-        await sheets.spreadsheets.get({ spreadsheetId: SPREADSHEET_ID });
-        console.log("✅ CONEXÃO COM GOOGLE SHEETS BEM SUCEDIDA!");
-    } catch (error) {
-        if (error.code === 404) {
-            console.error("❌ ERRO: Planilha não encontrada. Verifique o SPREADSHEET_ID.");
-        } else if (error.code === 403 || error.message.includes('permission')) {
-            console.error("❌ ERRO: Permissão negada. Verifique se o email da conta de serviço (no credentials.json) foi adicionado como 'Editor' na planilha.");
-        } else if (error.code === 'ENOENT') {
-            console.error("❌ ERRO: Arquivo credentials.json não encontrado.");
-        } else {
-            console.error("❌ ERRO ao conectar com Google Sheets:", error.message);
-        }
-    }
-}
+        const { name, email, password } = req.body;
 
-checkConnection();
+        // Verifica se já existe
+        const userExists = await User.findOne({ email });
+        if (userExists) return res.status(400).json({ msg: "E-mail já cadastrado" });
 
-// Rota para buscar dados
-app.get('/api/orcamento', async (req, res) => {
-    try {
-        if (!SPREADSHEET_ID) {
-            return res.status(500).json({ error: 'SPREADSHEET_ID not configured' });
-        }
+        // Criptografia (Hashing): Transformamos "senha123" em "$2a$10$Xy..."
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        const response = await sheets.spreadsheets.values.get({
-            spreadsheetId: SPREADSHEET_ID,
-            range: 'Página1!A:E',
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
         });
 
-        const rows = response.data.values;
-
-        // Se não houver dados ou só houver o cabeçalho
-        if (!rows || rows.length < 2) {
-            return res.json([]);
-        }
-
-        // Ignora a primeira linha (cabeçalho) e mapeia
-        // Nova Estrutura da Planilha:
-        // Coluna D (row[3]): Tipo (Entrada/Saída)
-        const data = rows.slice(1).map(row => {
-            let tipoRaw = (row[3] || "").trim().toLowerCase();
-
-            // Lógica inteligente para definir o tipo
-            let tipo = "Saída"; // Default
-            if (tipoRaw === 'entrada' || tipoRaw === 'receita' || tipoRaw === 'ganho') {
-                tipo = "Entrada";
-            } else if (tipoRaw === 'saída' || tipoRaw === 'saida' || tipoRaw === 'gasto' || tipoRaw === 'despesa') {
-                tipo = "Saída";
-            } else if (!tipoRaw) {
-                // Se estiver vazio, tenta adivinhar pela Categoria
-                const cat = (row[1] || "").toLowerCase();
-                if (cat.includes('salario') || cat.includes('salário') || cat.includes('receita') || cat.includes('venda')) {
-                    tipo = "Entrada";
-                }
-            }
-
-            return {
-                data: row[0],
-                categoria: row[1] || "Sem Categoria",
-                quantidade: parseFloat(row[2] ? row[2].replace('R$', '').replace('.', '').replace(',', '.') : 0) || 0,
-                tipo: tipo
-            };
-        });
-
-        res.json(data);
-    } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-        res.status(500).json({ error: 'Erro ao buscar dados do Google Sheets', details: error.message });
+        await newUser.save();
+        res.status(201).json({ msg: "Usuário criado com sucesso!" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Rota para adicionar dados
-app.post('/api/orcamento', async (req, res) => {
-    const { categoria, quantidade, tipo } = req.body; // Recebe o TIPO agora
-
-    if (!SPREADSHEET_ID) {
-        return res.status(500).json({ error: 'SPREADSHEET_ID not configured' });
-    }
-
+// LOGIN
+app.post("/api/auth/login", async (req, res) => {
     try {
-        const hoje = new Date().toLocaleDateString('pt-BR'); // Ex: 19/12/2025
+        const { email, password } = req.body;
 
-        await sheets.spreadsheets.values.append({
-            spreadsheetId: SPREADSHEET_ID,
-            // Importante: Aumentar o range para D
-            range: 'Página1!A:D',
-            valueInputOption: 'USER_ENTERED',
-            resource: {
-                // Salva: Data | Categoria | Valor | Tipo
-                values: [[hoje, categoria, quantidade, tipo || 'Saída']],
+        // Busca usuário
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ msg: "Usuário não encontrado" });
+
+        // Verifica senha (Compara a senha digitada com a hash do banco)
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ msg: "Senha incorreta" });
+
+        // Gera o Token (Crachá)
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: "1d",
+        });
+
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                stats: user.stats,
             },
         });
-        res.json({ categoria, quantidade, tipo });
-    } catch (error) {
-        console.error('Erro ao adicionar dados:', error);
-        res.status(500).json({ error: 'Erro ao adicionar dados no Google Sheets' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
+/* =========================================================
+   ROTAS DE ORÇAMENTO (TRANSAÇÕES)
+   ========================================================= */
+
+// LISTAR (GET)
+app.get("/api/orcamento", authenticateToken, async (req, res) => {
+    try {
+        // Busca só as transações DESTE usuário
+        const transactions = await Transaction.find({ userId: req.user.id }).sort({
+            date: -1,
+        });
+        res.json(transactions);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// CRIAR (POST)
+app.post("/api/orcamento", authenticateToken, async (req, res) => {
+    try {
+        const { category, value, type, date } = req.body;
+
+        const newTransaction = new Transaction({
+            userId: req.user.id, // Vincula ao usuário logado
+            category,
+            value,
+            type, // Entrada ou Saída
+            date: date || Date.now(),
+        });
+
+        const savedTransaction = await newTransaction.save();
+        res.json(savedTransaction);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// REMOVER (DELETE)
+app.delete("/api/orcamento/:id", authenticateToken, async (req, res) => {
+    try {
+        await Transaction.findOneAndDelete({
+            _id: req.params.id,
+            userId: req.user.id, // Garante que só deleta o seu próprio
+        });
+        res.json({ msg: "Item removido" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`🚀 Servidor MongoDB rodando na porta ${PORT}`);
 });
