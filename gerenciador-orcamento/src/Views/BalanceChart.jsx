@@ -4,18 +4,18 @@ export default function BalanceChart({ data }) {
     const { entradas, saidas, total } = useMemo(() => {
         if (!data || data.length === 0) return { entradas: 0, saidas: 0, total: 1 };
 
-        const ent = data
-            .filter(item => item.tipo === 'Entrada')
-            .reduce((acc, item) => acc + item.quantidade, 0);
+        const entradas = data
+            .filter(item => item.type === 'Entrada')
+            .reduce((acc, item) => acc + Number(item.value), 0);
 
         const sai = data
-            .filter(item => !item.tipo || item.tipo === 'Saída')
-            .reduce((acc, item) => acc + item.quantidade, 0);
+            .filter(item => !item.type || item.type === 'Saída')
+            .reduce((acc, item) => acc + Number(item.value), 0);
 
         // Define o total como o maior valor para usar de escala (100%)
-        const maxVal = Math.max(ent, sai) || 1;
+        const maxVal = Math.max(entradas, saidas) || 1;
 
-        return { entradas: ent, saidas: sai, total: maxVal };
+        return { entradas, saidas, total: maxVal };
     }, [data]);
 
     if (!data || data.length === 0) return null;
