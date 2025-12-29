@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp, faArrowDown, faWallet } from '@fortawesome/free-solid-svg-icons';
 
 export default function DashboardCards({ data }) {
     const metrics = useMemo(() => {
@@ -25,7 +27,7 @@ export default function DashboardCards({ data }) {
                     {subtext && <p className="text-xs text-gray-400 mt-1 font-medium">{subtext}</p>}
                 </div>
                 <div className={`p-3 bg-${color}-100 rounded-lg text-${color}-600`}>
-                    {icon}
+                    <FontAwesomeIcon icon={icon} className="w-6 h-6" />
                 </div>
             </div>
         </div>
@@ -38,9 +40,7 @@ export default function DashboardCards({ data }) {
                 title="Entradas"
                 value={`R$ ${metrics.entradas.toFixed(2)}`}
                 color="emerald"
-                icon={
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg>
-                }
+                icon={faArrowUp}
             />
 
             {/* Saídas */}
@@ -48,9 +48,7 @@ export default function DashboardCards({ data }) {
                 title="Saídas"
                 value={`R$ ${metrics.saidas.toFixed(2)}`}
                 color="rose"
-                icon={
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path></svg>
-                }
+                icon={faArrowDown}
             />
 
             {/* Saldo */}
@@ -59,9 +57,7 @@ export default function DashboardCards({ data }) {
                 value={`R$ ${metrics.saldo.toFixed(2)}`}
                 subtext={metrics.saldo >= 0 ? "No Azul" : "No Vermelho!"}
                 color={metrics.saldo >= 0 ? "blue" : "orange"}
-                icon={
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                }
+                icon={faWallet}
             />
         </div>
     );
