@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 export default function Register() {
     const [name, setName] = useState("");
@@ -14,12 +15,12 @@ export default function Register() {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            alert("As senhas não coincidem!");
+            toast.error("As senhas não coincidem!");
             return;
         }
 
         if (!acceptedTerms) {
-            alert("Você precisa aceitar os termos.");
+            toast.error("Você precisa aceitar os termos.");
             return;
         }
 
@@ -35,17 +36,17 @@ export default function Register() {
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.msg || "Erro ao cadastrar");
+                toast.error(data.msg || "Erro ao cadastrar");
                 setIsLoading(false);
                 return;
             }
 
-            alert("Conta criada com sucesso! Faça login.");
+            toast.success("Conta criada com sucesso! Faça login.");
             navigate("/login");
 
         } catch (error) {
             console.error(error);
-            alert("Erro de conexão com o servidor");
+            toast.error("Erro de conexão com o servidor");
             setIsLoading(false);
         }
     };
