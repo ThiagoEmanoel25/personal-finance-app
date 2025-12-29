@@ -16,8 +16,6 @@ app.use(express.json());
 // 1. Mongoose: É o nosso ODM (Object Data Modeler). Ele traduz código JS para comandos do Banco de Dados.
 // 2. JWT (JSON Web Token): É o crachá digital. Quando o usuário loga, damos um token. Ele usa esse token para pedir dados.
 
-console.log("🔍 Tentando conectar ao Mongo com URI:", process.env.MONGO_URI); // DEBUG
-
 // Conexão com MongoDB
 mongoose
     .connect(process.env.MONGO_URI)
@@ -45,7 +43,6 @@ const authenticateToken = (req, res, next) => {
 // REGISTRO
 app.post("/api/auth/register", async (req, res) => {
     try {
-        console.log("📝 Recebido pedido de registro:", req.body); // DEBUG
         const { name, email, password } = req.body;
 
         // Verifica se já existe
@@ -65,14 +62,12 @@ app.post("/api/auth/register", async (req, res) => {
             password: hashedPassword,
         });
 
-        console.log("💾 Tentando salvar usuário no Mongo...");
-        const savedUser = await newUser.save();
-        console.log("✅ Usuário salvo com sucesso! ID:", savedUser._id);
+        await newUser.save();
 
         res.status(201).json({ msg: "Usuário criado com sucesso!" });
     } catch (err) {
-        console.error("❌ Erro no Registro:", err); // LOG DETALHADO NO TERMINAL
-        res.status(500).json({ error: err.message, stack: err.stack });
+        console.error("Erro no Registro:", err);
+        res.status(500).json({ error: err.message });
     }
 });
 
