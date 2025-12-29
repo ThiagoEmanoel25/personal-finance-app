@@ -5,7 +5,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 const Transaction = require("./models/Transaction");
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,8 @@ app.use(express.json());
 // --- CONCEITOS ---
 // 1. Mongoose: É o nosso ODM (Object Data Modeler). Ele traduz código JS para comandos do Banco de Dados.
 // 2. JWT (JSON Web Token): É o crachá digital. Quando o usuário loga, damos um token. Ele usa esse token para pedir dados.
+
+console.log("🔍 Tentando conectar ao Mongo com URI:", process.env.MONGO_URI); // DEBUG
 
 // Conexão com MongoDB
 mongoose
@@ -42,13 +45,17 @@ const authenticateToken = (req, res, next) => {
 // REGISTRO
 app.post("/api/auth/register", async (req, res) => {
     try {
+        console.log("📝 Recebido pedido de registro:", req.body); // DEBUG
         const { name, email, password } = req.body;
 
         // Verifica se já existe
         const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ msg: "E-mail já cadastrado" });
+        if (userExists) {
+            console.log("⚠️ Usuário já existe:", email);
+            return res.status(400).json({ msg: "E-mail já cadastrado" });
+        }
 
-        // Criptografia (Hashing): Transformamos "senha123" em "$2a$10$Xy..."
+        // Criptografia
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -58,10 +65,14 @@ app.post("/api/auth/register", async (req, res) => {
             password: hashedPassword,
         });
 
-        await newUser.save();
+        console.log("💾 Tentando salvar usuário no Mongo...");
+        const savedUser = await newUser.save();
+        console.log("✅ Usuário salvo com sucesso! ID:", savedUser._id);
+
         res.status(201).json({ msg: "Usuário criado com sucesso!" });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("❌ Erro no Registro:", err); // LOG DETALHADO NO TERMINAL
+        res.status(500).json({ error: err.message, stack: err.stack });
     }
 });
 
