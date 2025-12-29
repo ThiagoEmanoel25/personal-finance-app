@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import { Login, Register, Dashboard } from "./views";
 
 // Componente simples para proteger rotas
@@ -10,6 +11,7 @@ const PrivateRoute = ({ children }) => {
 export default function App() {
   return (
     <Router>
+      <Toaster position="top-right" />
       <Routes>
         {/* Rotas Públicas */}
         <Route path="/login" element={<Login />} />

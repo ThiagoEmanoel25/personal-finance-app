@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ export default function Login() {
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.msg || "Erro ao entrar");
+                toast.error(data.msg || "Erro ao entrar");
                 setIsLoading(false);
                 return;
             }
@@ -29,11 +30,12 @@ export default function Login() {
             // Sucesso: Salva o Token e Usuário
             localStorage.setItem("authToken", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
+            toast.success(`Bem-vindo, ${data.user.name}!`);
 
             navigate("/"); // Vai para o Dashboard
         } catch (error) {
             console.error(error);
-            alert("Erro de conexão com o servidor");
+            toast.error("Erro de conexão com o servidor");
             setIsLoading(false);
         }
     };
