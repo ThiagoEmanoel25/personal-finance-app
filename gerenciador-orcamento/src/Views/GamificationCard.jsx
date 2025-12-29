@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGamepad, faShieldAlt, faRocket, faGem } from '@fortawesome/free-solid-svg-icons';
 
 export default function GamificationCard({ data }) {
     // 1. Lógica do Nível (XP = Saldo Atual)
@@ -45,7 +47,8 @@ export default function GamificationCard({ data }) {
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate__animated animate__fadeIn">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    🎮 Nível {currentLevel}: {getTitle(currentLevel)}
+                    <FontAwesomeIcon icon={faGamepad} className="text-purple-500" />
+                    Nível {currentLevel}: {getTitle(currentLevel)}
                 </h3>
                 <span className="text-sm font-medium text-gray-500">{currentXp} / {nextLevelXp} XP</span>
             </div>
@@ -65,7 +68,7 @@ export default function GamificationCard({ data }) {
                 {/* Badge 1: Mão de Vaca */}
                 <Badge
                     active={hasBadgeSaver}
-                    icon="🛡️"
+                    icon={faShieldAlt}
                     title="Mão de Vaca"
                     desc="3+ dias sem gastar"
                 />
@@ -73,7 +76,7 @@ export default function GamificationCard({ data }) {
                 {/* Badge 2: Investidor */}
                 <Badge
                     active={hasBadgeInvestor}
-                    icon="🚀"
+                    icon={faRocket}
                     title="Investidor"
                     desc="Guardou +20%"
                 />
@@ -81,7 +84,7 @@ export default function GamificationCard({ data }) {
                 {/* Badge 3: Magnata */}
                 <Badge
                     active={hasBadgeRich}
-                    icon="💎"
+                    icon={faGem}
                     title="Magnata"
                     desc="Caixa > R$ 5k"
                 />
@@ -106,7 +109,9 @@ function Badge({ active, icon, title, desc }) {
             ? "bg-blue-50 border-blue-100 opacity-100"
             : "bg-gray-50 border-gray-100 opacity-40 grayscale"
             }`}>
-            <span className="text-2xl mb-1">{icon}</span>
+            <div className="mb-1 text-blue-500">
+                <FontAwesomeIcon icon={icon} size="lg" />
+            </div>
             <span className="text-xs font-bold text-gray-700">{title}</span>
             <span className="text-[10px] text-gray-400 leading-tight">{desc}</span>
         </div>
