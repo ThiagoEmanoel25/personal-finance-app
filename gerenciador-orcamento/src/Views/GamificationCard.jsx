@@ -44,9 +44,9 @@ export default function GamificationCard({ data }) {
     const hasBadgeRich = saldo > 5000; // Saldo acima de 5k
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate__animated animate__fadeIn">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 animate__animated animate__fadeIn">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
                     <FontAwesomeIcon icon={faGamepad} className="text-purple-500" />
                     Nível {currentLevel}: {getTitle(currentLevel)}
                 </h3>
@@ -54,7 +54,7 @@ export default function GamificationCard({ data }) {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-gray-100 rounded-full h-3 mb-6">
+            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-3 mb-6">
                 <div
                     className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000"
                     style={{ width: `${progressPercent}%` }}
@@ -92,7 +92,7 @@ export default function GamificationCard({ data }) {
             </div>
 
             {/* Streak Info */}
-            <div className="mt-4 pt-4 border-t border-gray-50 text-center">
+            <div className="mt-4 pt-4 border-t border-gray-50 dark:border-gray-700 text-center">
                 <p className="text-sm text-gray-500">
                     Sequência Atual: <span className="font-bold text-green-600">{daysWithoutSpending} dias</span> sem despesas!
                 </p>
@@ -106,13 +106,13 @@ export default function GamificationCard({ data }) {
 function Badge({ active, icon, title, desc }) {
     return (
         <div className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all ${active
-            ? "bg-blue-50 border-blue-100 opacity-100"
-            : "bg-gray-50 border-gray-100 opacity-40 grayscale"
+            ? "bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800 opacity-100"
+            : "bg-gray-50 dark:bg-gray-700/50 border-gray-100 dark:border-gray-600 opacity-40 grayscale"
             }`}>
             <div className="mb-1 text-blue-500">
                 <FontAwesomeIcon icon={icon} size="lg" />
             </div>
-            <span className="text-xs font-bold text-gray-700">{title}</span>
+            <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{title}</span>
             <span className="text-[10px] text-gray-400 leading-tight">{desc}</span>
         </div>
     )
