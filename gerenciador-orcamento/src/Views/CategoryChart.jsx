@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import { JSCharting } from 'jscharting-react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function CategoryChart({ data }) {
+    const { theme } = useTheme();
     const chartConfig = useMemo(() => {
         if (!data || data.length === 0) return null;
 
@@ -23,7 +25,8 @@ export default function CategoryChart({ data }) {
             legend_position: 'bottom',
             title_label_text: 'Gastos por Categoria',
             title_label_style_fontWeight: 'bold',
-            title_label_color: '#374151',
+            title_label_color: theme === 'dark' ? '#F3F4F6' : '#374151',
+            legend_label_color: theme === 'dark' ? '#F3F4F6' : '#374151', // Também ajusta a legenda
             defaultSeries: {
                 shape_padding: 0.2, // Espaçamento entre as fatias
                 palette: ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#6366F1', '#EC4899', '#8B5CF6'] // Cores personalizadas
@@ -33,12 +36,12 @@ export default function CategoryChart({ data }) {
                 points: points
             }]
         };
-    }, [data]);
+    }, [data, theme]);
 
     if (!chartConfig) return null;
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-sm mb-6 border border-gray-100 animate__animated animate__fadeInLeft animate__delay-1s">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm mb-6 border border-gray-100 dark:border-gray-700 animate__animated animate__fadeInLeft animate__delay-1s">
             {/* Container responsivo para o gráfico */}
             <div className="h-80 w-full">
                 <JSCharting options={chartConfig} />
