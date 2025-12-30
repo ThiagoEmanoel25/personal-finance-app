@@ -23,14 +23,14 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col p-4 md:p-8 animate__animated animate__fadeIn">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col p-4 md:p-8 animate__animated animate__fadeIn">
             <header className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                        <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                        <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Gerenciador de Orçamento
                     </h1>
-                    <p className="text-gray-500">Painel de Controle Financeiro</p>
+                    <p className="text-gray-500 dark:text-gray-400">Painel de Controle Financeiro</p>
                 </div>
 
                 {/* Logout Button Simulation */}
@@ -39,7 +39,7 @@ export default function Dashboard() {
                         localStorage.removeItem('authToken');
                         window.location.reload();
                     }}
-                    className="text-sm text-red-500 hover:text-red-700 font-medium"
+                    className="text-sm text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                 >
                     Sair
                 </button>
@@ -57,8 +57,8 @@ export default function Dashboard() {
                 </div>
 
                 {/* Direita: Operacional (Form + Table) - Ocupa 5 colunas no desktop */}
-                <div className="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-4">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Lançamentos</h2>
+                <div className="lg:col-span-5 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 sticky top-4">
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b pb-2 dark:border-gray-700">Lançamentos</h2>
                     <BudgetForm onAdd={handleAdd} />
                     <div className="mt-4">
                         <BudgetTable data={BudgetData} onRemove={handleRemove} />

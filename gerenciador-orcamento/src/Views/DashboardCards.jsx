@@ -18,15 +18,15 @@ export default function DashboardCards({ data }) {
     }, [data]);
 
     const Card = ({ title, value, subtext, color, icon }) => (
-        <div className={`bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all animate__animated animate__fadeInDown`}>
-            <div className={`absolute right-0 top-0 w-24 h-24 bg-${color}-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-110 transition-transform`}></div>
+        <div className={`bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group hover:shadow-md transition-all animate__animated animate__fadeInDown`}>
+            <div className={`absolute right-0 top-0 w-24 h-24 bg-${color}-50 dark:bg-${color}-900/20 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-110 transition-transform`}></div>
             <div className="relative z-10 flex justify-between items-start">
                 <div>
-                    <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">{title}</p>
-                    <h3 className={`text-2xl font-bold text-${color}-600`}>{value}</h3>
+                    <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">{title}</p>
+                    <h3 className={`text-2xl font-bold text-${color}-600 dark:text-${color}-400`}>{value}</h3>
                     {subtext && <p className="text-xs text-gray-400 mt-1 font-medium">{subtext}</p>}
                 </div>
-                <div className={`p-3 bg-${color}-100 rounded-lg text-${color}-600`}>
+                <div className={`p-3 bg-${color}-100 dark:bg-${color}-900/30 rounded-lg text-${color}-600 dark:text-${color}-400`}>
                     <FontAwesomeIcon icon={icon} className="w-6 h-6" />
                 </div>
             </div>
