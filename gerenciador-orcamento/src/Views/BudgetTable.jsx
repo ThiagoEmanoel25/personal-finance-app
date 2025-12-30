@@ -1,14 +1,14 @@
 
 export default function BudgetTable({ data = [], onRemove }) {
   if (!data.length) {
-    return <p className="text-gray-500 text-center">Nenhum dado disponível.</p>;
+    return <p className="text-gray-500 dark:text-gray-400 text-center">Nenhum dado disponível.</p>;
   }
 
   return (
     <div className="w-full overflow-x-auto animate__animated animate__fadeInUp">
-      <table className="w-full border-collapse border border-gray-100 rounded-lg min-w-[600px]">
+      <table className="w-full border-collapse border border-gray-100 dark:border-gray-700 rounded-lg min-w-[600px]">
         <thead>
-          <tr className="bg-gray-50 text-gray-500 text-sm uppercase tracking-wider">
+          <tr className="bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-sm uppercase tracking-wider">
             <th className="px-4 py-3 text-left font-semibold">Data</th>
             <th className="px-4 py-3 text-left font-semibold">Categoria</th>
             <th className="px-4 py-3 text-left font-semibold">Valor</th>
@@ -16,19 +16,19 @@ export default function BudgetTable({ data = [], onRemove }) {
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
           {data.map((item, index) => (
             <tr
               key={item._id || index}
-              className="hover:bg-blue-50 transition-colors duration-150 group"
+              className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 group"
             >
-              <td className="px-4 py-3 text-gray-600 text-sm">{
+              <td className="px-4 py-3 text-gray-600 dark:text-gray-300 text-sm">{
                 new Date(item.date).toLocaleDateString('pt-BR') || "-"
               }</td>
 
-              <td className="px-4 py-3 font-medium text-gray-800">{item.category}</td>
+              <td className="px-4 py-3 font-medium text-gray-800 dark:text-white">{item.category}</td>
 
-              <td className={`px-4 py-3 font-mono font-medium ${item.type === 'Entrada' ? 'text-green-600' : 'text-gray-700'
+              <td className={`px-4 py-3 font-mono font-medium ${item.type === 'Entrada' ? 'text-green-600 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'
                 }`}>
                 {item.type === 'Entrada' ? '+' : '-'} {Number(item.value).toLocaleString("pt-BR", {
                   style: "currency",
