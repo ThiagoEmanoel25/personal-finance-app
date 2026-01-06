@@ -15,7 +15,20 @@ export default function App() {
   return (
     <ThemeProvider>
       <Router>
-        <Toaster position="top-right" />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: '#333',
+              color: '#fff',
+            },
+            className: 'dark:bg-gray-800 dark:text-white',
+            // Default styling for light mode is usually fine, but let's make it neutral to work on both or rely on className if supported by library properly.
+            // React Hot Toast 'style' prop overrides deeply, so let's stick to a neutral dark/light safe style or just use the defaults which are white/black.
+            // A better approach is often letting the library handle it or forcing a specific look.
+            // Let's use a conditional style or just 'class' if the library supports it well (it accepts className).
+          }}
+        />
         <Routes>
           {/* Rotas Públicas */}
           <Route path="/login" element={<Login />} />
