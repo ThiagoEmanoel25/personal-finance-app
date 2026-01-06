@@ -1,16 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function BudgetForm({ onAdd }) {
+export default function BudgetForm({ onAdd, onUpdate, initialData, onCancelEdit }) {
+  const [tipo, setTipo] = useState("Saída");
   const [categoria, setCategoria] = useState("");
   const [quantidade, setQuantidade] = useState("");
-  const [tipo, setTipo] = useState("Saída"); // Default: Saída
+
+  // Efeito para preencher o formulário quando estiver editando
+  useEffect(() => {
+    if (initialData) {
+      setTipo(initialData.type);
+      setCategoria(initialData.category);
+      setQuantidade(initialData.value);
+    } else {
+      // Limpa se não estiver editando
+      setTipo("Saída");
+      setCategoria("");
+      setQuantidade("");
+    }
+  }, [initialData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!categoria || !quantidade) return;
-    onAdd(categoria, parseFloat(quantidade), tipo);
-    setCategoria("");
-    setQuantidade("");
+
+    if (initialData) {
+      // Modo Edição
+      onUpdate({
+        ...initialData,
+        category: categoria,
+        value: Number(quantidade),
+        type: tipo
+      });
+    } else {
+      // Modo Criação
+      onAdd({
+        category: categoria,
+        value: Number(quantidade),
+        type: tipo,
+      });
+    }
+
+    if (!initialData) {
+      setCategoria("");
+      setQuantidade("");
+    }
   };
 
   return (
@@ -54,13 +87,23 @@ export default function BudgetForm({ onAdd }) {
         />
         <button
           type="submit"
-          className={`text-white rounded-lg px-6 py-2 transition-colors ${tipo === "Entrada"
-            ? "bg-green-600 hover:bg-green-700"
-            : "bg-red-600 hover:bg-red-700"
+          className={`px-6 py-2 rounded-lg font-bold text-white transition-all shadow-md ${initialData
+            ? "bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700"
+            : (tipo === "Entrada" ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700")
             }`}
         >
-          {tipo === "Entrada" ? "Receber" : "Pagar"}
+          {initialData ? "Atualizar" : (tipo === "Entrada" ? "Receber" : "Pagar")}
         </button>
+
+        {initialData && (
+          <button
+            type="button"
+            onClick={onCancelEdit}
+            className="px-4 py-2 rounded-lg font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            Cancelar
+          </button>
+        )}
       </div>
     </form>
   );
