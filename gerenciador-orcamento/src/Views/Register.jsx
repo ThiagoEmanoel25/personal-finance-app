@@ -52,11 +52,11 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-blue-50 p-4">
-            <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md animate__animated animate__fadeInUp">
+        <div className="min-h-screen flex items-center justify-center bg-blue-50 dark:bg-gray-900 p-4 transition-colors duration-300">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl w-full max-w-md animate__animated animate__fadeInUp border border-gray-100 dark:border-gray-700">
                 <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Criar conta</h2>
-                    <p className="text-gray-500 text-sm">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Criar conta</h2>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">
                         Preencha os dados abaixo para criar sua conta
                     </p>
                 </div>
@@ -65,7 +65,7 @@ export default function Register() {
 
                     {/* Nome Completo */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-200 mb-2">
                             Nome completo
                         </label>
                         <div className="relative">
@@ -79,7 +79,7 @@ export default function Register() {
                                 placeholder="Seu nome"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="block w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="block w-full pl-10 pr-3 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50 focus:border-blue-500 transition-colors sm:text-sm"
                                 required
                             />
                         </div>
@@ -87,7 +87,7 @@ export default function Register() {
 
                     {/* E-mail */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-200 mb-2">
                             E-mail
                         </label>
                         <div className="relative">
@@ -101,7 +101,7 @@ export default function Register() {
                                 placeholder="seu@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="block w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="block w-full pl-10 pr-3 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50 focus:border-blue-500 transition-colors sm:text-sm"
                                 required
                             />
                         </div>
@@ -109,7 +109,7 @@ export default function Register() {
 
                     {/* Senha */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        <label className="block text-sm font-semibold text-gray-900 dark:text-gray-200 mb-2">
                             Senha
                         </label>
                         <div className="relative">
@@ -123,7 +123,7 @@ export default function Register() {
                                 placeholder="........"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="block w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="block w-full pl-10 pr-10 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50 focus:border-blue-500 transition-colors sm:text-sm"
                                 required
                             />
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -170,9 +170,9 @@ export default function Register() {
                             type="checkbox"
                             checked={acceptedTerms}
                             onChange={(e) => setAcceptedTerms(e.target.checked)}
-                            className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                            className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
                         />
-                        <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
+                        <label htmlFor="terms" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
                             Aceito os <a href="#" className="text-blue-600 hover:underline">termos de uso</a> e <a href="#" className="text-blue-600 hover:underline">política de privacidade</a>
                         </label>
                     </div>
@@ -181,7 +181,7 @@ export default function Register() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-all ${isLoading ? "opacity-75 cursor-not-allowed" : ""
+                        className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 dark:bg-blue-600 hover:bg-black dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-blue-500 transition-all ${isLoading ? "opacity-75 cursor-not-allowed" : ""
                             }`}
                     >
                         {isLoading ? "Criando conta..." : "Criar conta"}
@@ -189,9 +189,9 @@ export default function Register() {
                 </form>
 
                 <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                         Já tem uma conta?{" "}
-                        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
                             Faça login
                         </Link>
                     </p>
