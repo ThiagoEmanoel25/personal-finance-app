@@ -110,8 +110,22 @@ app.post("/api/auth/login", async (req, res) => {
 // LISTAR (GET)
 app.get("/api/orcamento", authenticateToken, async (req, res) => {
     try {
-        // Busca só as transações DESTE usuário
-        const transactions = await Transaction.find({ userId: req.user.id }).sort({
+        const { month, year } = req.query;
+        let query = { userId: req.user.id };
+
+        if (month && year) {
+            // Cria range do dia 1 até o último dia do mês
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59); // Último dia do mês
+
+            query.date = {
+                $gte: startDate,
+                $lte: endDate
+            };
+        }
+
+        // Busca só as transações DESTE usuário com o filtro opcional
+        const transactions = await Transaction.find(query).sort({
             date: -1,
         });
         res.json(transactions);
@@ -124,6 +138,8 @@ app.get("/api/orcamento", authenticateToken, async (req, res) => {
 app.post("/api/orcamento", authenticateToken, async (req, res) => {
     try {
         const { category, value, type, date } = req.body;
+        console.log("POST /api/orcamento - Recebido:", req.body);
+        console.log("User ID:", req.user.id);
 
         const newTransaction = new Transaction({
             userId: req.user.id, // Vincula ao usuário logado
@@ -135,6 +151,30 @@ app.post("/api/orcamento", authenticateToken, async (req, res) => {
 
         const savedTransaction = await newTransaction.save();
         res.json(savedTransaction);
+    } catch (err) {
+        console.error("❌ ERRO NO POST /api/orcamento:", err);
+        res.status(500).json({ error: err.message });
+    }
+
+});
+
+// EDITAR (PUT)
+app.put("/api/orcamento/:id", authenticateToken, async (req, res) => {
+    try {
+        const { category, value, type, date } = req.body;
+
+        // Encontra e atualiza, garantindo que pertence ao usuário
+        const updatedTransaction = await Transaction.findOneAndUpdate(
+            { _id: req.params.id, userId: req.user.id },
+            { category, value, type, date },
+            { new: true } // Retorna o objeto atualizado
+        );
+
+        if (!updatedTransaction) {
+            return res.status(404).json({ msg: "Transação não encontrada ou não autorizada" });
+        }
+
+        res.json(updatedTransaction);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
